@@ -4,7 +4,7 @@ import { BaseContainer } from "../../helpers/layout";
 import { getDomain } from "../../helpers/getDomain";
 import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
-import { Button } from "../../views/design/Button";
+import {Button} from "../../views/design/Button";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -14,13 +14,12 @@ const FormContainer = styled.div`
   min-height: 300px;
   justify-content: center;
 `;
-
 const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 375px;
+  height: 700px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -29,6 +28,7 @@ const Form = styled.div`
   background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
+
 
 const InputField = styled.input`
   &::placeholder {
@@ -76,7 +76,8 @@ class Login extends React.Component {
     super();
     this.state = {
       name: null,
-      username: null
+      username: null,
+      password: null
     };
   }
   /**
@@ -94,21 +95,21 @@ class Login extends React.Component {
         name: this.state.name
       })
     })
-      .then(response => response.json())
-      .then(returnedUser => {
-        const user = new User(returnedUser);
-        // store the token into the local storage
-        localStorage.setItem("token", user.token);
-        // user login successfully worked --> navigate to the route /game in the GameRouter
-        this.props.history.push(`/game`);
-      })
-      .catch(err => {
-        if (err.message.match(/Failed to fetch/)) {
-          alert("The server cannot be reached. Did you start it?");
-        } else {
-          alert(`Something went wrong during the login: ${err.message}`);
-        }
-      });
+        .then(response => response.json())
+        .then(returnedUser => {
+          const user = new User(returnedUser);
+          // store the token into the local storage
+          localStorage.setItem("token", user.token);
+          // user login successfully worked --> navigate to the route /game in the GameRouter
+          this.props.history.push(`/game`);
+        })
+        .catch(err => {
+          if (err.message.match(/Failed to fetch/)) {
+            alert("The server cannot be reached. Did you start it?");
+          } else {
+            alert(`Something went wrong during the login: ${err.message}`);
+          }
+        });
   }
 
   /**
@@ -150,23 +151,65 @@ class Login extends React.Component {
                 this.handleInputChange("name", e.target.value);
               }}
             />
+            <Label>Password</Label>
+            <InputField
+                placeholder="Enter here.."
+                onChange={e => {
+                  this.handleInputChange("password", e.target.value);
+                }}
+            />
             <ButtonContainer>
               <Button
                 disabled={!this.state.username || !this.state.name}
                 width="50%"
                 onClick={() => {
-                  this.login();
+                  this.register();
                 }}
               >
+                Register
+              </Button>
+            </ButtonContainer>
+            {/*//create a login option if not registered*/}
+            <p class = "message" align="center">Already registered? <a href="#">Login</a>
+            </p>
+
+          {/*//here I create the login form for users who are already registered*/}
+
+                <Label>Username</Label>
+                <InputField
+                  placeholder="Enter here.."
+                  onChange={e => {
+                    this.handleInputChange("name", e.target.value);
+                  }}
+                />
+
+               <Label>Password</Label>
+               <InputField
+                  placeholder="Enter here.."
+                  onChange={e => {
+                    this.handleInputChange("password", e.target.value);
+                  }}
+              />
+              <ButtonContainer>
+                <Button
+                    disabled={!this.state.username || !this.state.name}
+                    width="50%"
+                    onClick={() => {
+                      this.login();
+                    }}
+                >
                 Login
               </Button>
             </ButtonContainer>
+            <p className="message" align="center">Not registered? <a href="#">Register</a>
+            </p>
           </Form>
         </FormContainer>
       </BaseContainer>
     );
   }
 }
+
 
 /**
  * You can get access to the history object's properties via the withRouter.
