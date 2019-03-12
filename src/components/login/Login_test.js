@@ -1,12 +1,22 @@
+
+
 import React from "react";
 import styled from "styled-components";
-import { BaseContainer } from "../../helpers/layout";
-import { getDomain } from "../../helpers/getDomain";
+import {BaseContainer} from "../../helpers/layout";
+import {getDomain} from "../../helpers/getDomain";
 import User from "../shared/models/User";
-import { withRouter } from "react-router-dom";
-import { Button } from "../../views/design/Button";
+import {withRouter} from "react-router-dom";
+import {Button} from "../../views/design/Button";
 
 const FormContainer = styled.div`
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 300px;
+  justify-content: center;
+`;
+const PanelContainer = styled.div`
   margin-top: 2em;
   display: flex;
   flex-direction: column;
@@ -20,7 +30,21 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 375px;
+  height: 500px;
+  font-size: 16px;
+  font-weight: 300;
+  padding-left: 37px;
+  padding-right: 37px;
+  border-radius: 5px;
+  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
+  transition: opacity 0.5s ease, transform 0.5s ease;
+`;
+const Panel = styled.div`
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  width: 60%;
+  height: 500px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -65,8 +89,7 @@ const ButtonContainer = styled.div`
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
-class Login extends React.Component {
-
+class Login_test extends React.Component {
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
      * The constructor for a React component is called before it is mounted (rendered).
@@ -76,43 +99,32 @@ class Login extends React.Component {
     constructor() {
         super();
         this.state = {
+            name: null,
             username: null,
             password: null
         };
     }
+
     /**
      * HTTP POST request is sent to the backend.
      * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
      */
     login() {
-        console.log(JSON.stringify({
-            username: this.state.username,
-            name: this.state.name}));
-
-        const status = response => {
-            if(response.status === 200){
-                return Promise.resolve(response)
-            }
-            return Promise.reject(new Error())
-        }
-        const json =response=>response.json;
-        fetch(`${getDomain()}/login`, {
+        fetch(`${getDomain()}/users`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                //"requestType": "login"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 username: this.state.username,
                 name: this.state.name
             })
         })
-            .then(status)
-            .then(json)
-            .then(data => {
-                this.setState({user:data});
+            .then(response => response.json())
+            .then(returnedUser => {
+                const user = new User(returnedUser);
                 // store the token into the local storage
-                localStorage.setItem("token", this.state.user.token);
+                localStorage.setItem("token", user.token);
                 // user login successfully worked --> navigate to the route /game in the GameRouter
                 this.props.history.push(`/game`);
             })
@@ -133,7 +145,7 @@ class Login extends React.Component {
     handleInputChange(key, value) {
         // Example: if the key is username, this statement is the equivalent to the following one:
         // this.setState({'username': value});
-        this.setState({ [key]: value });
+        this.setState({[key]: value});
     }
 
     /**
@@ -143,7 +155,8 @@ class Login extends React.Component {
      * You may call setState() immediately in componentDidMount().
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
-    componentDidMount() {}
+    componentDidMount() {
+    }
 
     render() {
         return (
@@ -157,6 +170,13 @@ class Login extends React.Component {
                                 this.handleInputChange("username", e.target.value);
                             }}
                         />
+                        <Label>Name</Label>
+                        <InputField
+                            placeholder="Enter here.."
+                            onChange={e => {
+                                this.handleInputChange("name", e.target.value);
+                            }}
+                        />
                         <Label>Password</Label>
                         <InputField
                             placeholder="Enter here.."
@@ -166,7 +186,48 @@ class Login extends React.Component {
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.password}
+                                disabled={!this.state.username || !this.state.name}
+                                width="50%"
+                                onClick={() => {
+                                    this.register();
+                                }}
+                            >
+                                Register
+                            </Button>
+                        </ButtonContainer>
+                        {/*//create a login option if not registered*/}
+                        <p class="message" align="center">Already registered? <a href="#">Login</a>
+                        </p>
+                    </Form>
+                </FormContainer>
+                {/*   <script> src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+                <script>
+                    ('.message a').click(function(){
+                    ('form').animate({height: "toggle", opacity: "toggle"}, "slow")
+                });
+                </script>*/}
+
+                {/*//here I create the login form for users who are already registered*/}
+                <PanelContainer>
+                    <Panel>
+                        <Label>Username</Label>
+                        <InputField
+                            placeholder="Enter here.."
+                            onChange={e => {
+                                this.handleInputChange("name", e.target.value);
+                            }}
+                        />
+
+                        <Label>Password</Label>
+                        <InputField
+                            placeholder="Enter here.."
+                            onChange={e => {
+                                this.handleInputChange("password", e.target.value);
+                            }}
+                        />
+                        <ButtonContainer>
+                            <Button
+                                disabled={!this.state.username || !this.state.name}
                                 width="50%"
                                 onClick={() => {
                                     this.login();
@@ -175,42 +236,18 @@ class Login extends React.Component {
                                 Login
                             </Button>
                         </ButtonContainer>
-                        <div
-                            onClick={() =>
-                            {this.props.history.push(`/Register`)}
-                            }
-                            align="center">Not registered? <a href="#">Register</a></div>
-                    </Form>
-                </FormContainer>
+                        <p className="message" align="center">Not registered? <a href="#">Register</a>
+                        </p>
+                    </Panel>
+                </PanelContainer>
             </BaseContainer>
         );
     }
 }
 
+
 /**
  * You can get access to the history object's properties via the withRouter.
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
-export default withRouter(Login);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default withRouter(Login_test);

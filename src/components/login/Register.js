@@ -20,7 +20,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 375px;
+  height: 450px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -65,50 +65,63 @@ const ButtonContainer = styled.div`
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
-class Login extends React.Component {
+class Register extends React.Component {
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
      * The constructor for a React component is called before it is mounted (rendered).
      * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
      * These fields are then handled in the onChange() methods in the resp. InputFields
      */
+
+    /* We need to change the constructor */
     constructor() {
         super();
         this.state = {
-            name: null,
-            username: null
+            username: null,
+            password: null
         };
     }
     /**
      * HTTP POST request is sent to the backend.
      * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
      */
-    login() {
-        fetch(`${getDomain()}/users`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: this.state.username,
-                name: this.state.name
+
+    /* Template for register POST request */
+
+    register() {
+            fetch(`${getDomain()}/users`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "requestType": "register"
+                },
+                body: JSON.stringify({
+                    username: this.state.username,
+                    password: this.state.password
+                })
             })
-        })
-            .then(response => response.json())
-            .then(returnedUser => {
-                const user = new User(returnedUser);
-                // store the token into the local storage
-                localStorage.setItem("token", user.token);
-                // user login successfully worked --> navigate to the route /game in the GameRouter
-                this.props.history.push(`/game`);
-            })
-            .catch(err => {
-                if (err.message.match(/Failed to fetch/)) {
-                    alert("The server cannot be reached. Did you start it?");
-                } else {
-                    alert(`Something went wrong during the login: ${err.message}`);
-                }
-            });
+                .then(response => {
+                    if (response.status === 201){
+                        // alert(response.status + " Message");
+                        alert(response.status + "Your registration was successful!");
+                        const newUser = response.json();
+                        const user = new User(newUser);
+                        // store the token into the local storage
+                        localStorage.setItem("token", user.token);
+                        // user register successfully worked --> navigate to the route /login
+                        this.props.history.push(`/login`);
+                    }else{
+                        // alert(response.status + " Message");
+                        alert(response.status + "ERROR! Your registration was unsuccessful")
+                    }
+                })
+                .catch(err => {
+                    if (err.message.match(/Failed to fetch/)) {
+                        alert("The server cannot be reached. Did you start it?");
+                    } else {
+                        alert(`Something went wrong during the registration: ${err.message}`);
+                    }
+                });
     }
 
     /**
@@ -143,24 +156,30 @@ class Login extends React.Component {
                                 this.handleInputChange("username", e.target.value);
                             }}
                         />
-                        <Label>Name</Label>
+                        <Label>Password</Label>
                         <InputField
                             placeholder="Enter here.."
                             onChange={e => {
-                                this.handleInputChange("name", e.target.value);
+                                this.handleInputChange("password", e.target.value);
                             }}
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name}
+                                disabled={!this.state.username || !this.state.password}
                                 width="50%"
                                 onClick={() => {
-                                    this.login();
+                                    this.register();
                                 }}
                             >
-                                Login
+                                Register
                             </Button>
                         </ButtonContainer>
+                        <div
+                            onClick={() =>
+                            {this.props.history.push(`/login`)}
+                            }
+                            align="center">Already registered? <a href="#">Login</a></div>
+                        {/*>Already registered? Login</div>*/}
                     </Form>
                 </FormContainer>
             </BaseContainer>
@@ -172,4 +191,4 @@ class Login extends React.Component {
  * You can get access to the history object's properties via the withRouter.
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
-export default withRouter(Login);
+export default withRouter(Register);
