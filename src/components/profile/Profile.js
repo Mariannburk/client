@@ -6,7 +6,7 @@ import Player from "../../views/Player";
 import { Spinner } from "../../views/design/Spinner";
 import { Button } from "../../views/design/Button";
 import { withRouter } from "react-router-dom";
-
+import Player2 from "../../views/design/Player2";
 
 const Container = styled(BaseContainer)`
   color: white;
@@ -25,18 +25,25 @@ const PlayerContainer = styled.li`
   justify-content: center;
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  `;
+  
 class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: props.location.state.user
+            user: props.location.state.user
         };
+        this.user =props.location.state.user;
     }
 
-    logout() {
+   /* logout() {
         localStorage.removeItem("token");
         this.props.history.push("/login");
-    }
+    }*/
 
     render() {
         return (
@@ -45,13 +52,32 @@ class Profile extends React.Component {
                 {/*<p>Get all users from secure end point:</p>*/}
                     <div>
                         <Users>
-
-                                    <PlayerContainer key={this.state.user.id}>
-                                        <Player user={this.state.user} />
-
-                                    </PlayerContainer>
-
+                            <PlayerContainer key={this.state.user.id}>
+                                        <Player2 user={this.state.user} />
+                            </PlayerContainer>
                         </Users>
+                        <ButtonContainer>
+                            <Button
+                                disabled={this.state.user.token !== localStorage.getItem("token")}
+                                width="25%"
+                                onClick={() => {
+                                    this.props.history.push("/Profile/"+this.state.user.id+"/EditProfile");
+                                }}
+                            >
+                                Edit
+                            </Button>
+                            </ButtonContainer>
+                        <ButtonContainer>
+                            <Button
+                                width="25%"
+                                onClick={() => {
+                                this.props.history.go(-1);
+                             }}
+                            >
+                                Back
+                            </Button>
+                        </ButtonContainer>
+                        <ButtonContainer>
                         <Button
                             width="100%"
                             onClick={() => {
@@ -60,11 +86,11 @@ class Profile extends React.Component {
                         >
                             Logout
                         </Button>
+                        </ButtonContainer>
                     </div>
                 )}
             </Container>
         );
     }
 }
-
 export default withRouter(Profile);

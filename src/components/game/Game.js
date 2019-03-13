@@ -75,12 +75,12 @@ class Game extends React.Component {
                     <invisiButton
                         onClick={() =>
                         {this.props.history.push({
-                              pathname:"/Profile/"+user.id, state:{user}
+                              pathname:"/Profile/"+ user.id, state:{user}
                         })
                         }}>
                     <Player user={user} />
                     </invisiButton>
-                   {/* my attempt to make players as buttons
+                   {/* my first attempt to make players as buttons
                     <div
                         onClick={() =>
                         {this.props.history.push(`/profile/:id`)}
