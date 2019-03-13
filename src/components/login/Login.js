@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { BaseContainer } from "../../helpers/layout";
 import { getDomain } from "../../helpers/getDomain";
-import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 
@@ -77,7 +76,8 @@ class Login extends React.Component {
         super();
         this.state = {
             username: null,
-            password: null
+            password: null,
+            user:null
         };
     }
     /**
@@ -85,16 +85,14 @@ class Login extends React.Component {
      * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
      */
     login() {
-        console.log(JSON.stringify({
-            username: this.state.username,
-            name: this.state.name}));
+
 
         const status = response => {
             if(response.status === 200){
                 return Promise.resolve(response)
             }
             return Promise.reject(new Error())
-        }
+        };
         const json =response=>response.json;
         fetch(`${getDomain()}/login`, {
             method: "POST",
@@ -104,7 +102,7 @@ class Login extends React.Component {
             },
             body: JSON.stringify({
                 username: this.state.username,
-                name: this.state.name
+                password: this.state.password
             })
         })
             .then(status)

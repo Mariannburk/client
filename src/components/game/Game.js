@@ -72,7 +72,21 @@ class Game extends React.Component {
               {this.state.users.map(user => {
                 return (
                   <PlayerContainer key={user.id}>
+                    <invisiButton
+                        onClick={() =>
+                        {this.props.history.push({
+                              pathname:"/Profile/"+user.id, state:{user}
+                        })
+                        }}>
                     <Player user={user} />
+                    </invisiButton>
+                   {/* my attempt to make players as buttons
+                    <div
+                        onClick={() =>
+                        {this.props.history.push(`/profile/:id`)}
+                        }
+                        align="center"><a href="#">profile</a></div>*/}
+
                   </PlayerContainer>
                 );
               })}
