@@ -150,6 +150,7 @@ class EditProfile extends React.Component {
                                 this.handleInputChange("dateOfBirth", e.target.value);
                             }}
                         />
+
                         <ButtonContainer>
                             <Button
                                 //doesnt want to work
