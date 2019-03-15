@@ -93,7 +93,7 @@ class Register extends React.Component {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "requestType": "register"
+
                 },
                 body: JSON.stringify({
                     username: this.state.username,
@@ -168,6 +168,7 @@ class Register extends React.Component {
                                 disabled={!this.state.username || !this.state.password}
                                 width="50%"
                                 onClick={() => {
+                                    this.props.history.push(`/login`)
                                     this.register();
                                 }}
                             >

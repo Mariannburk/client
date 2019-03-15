@@ -111,6 +111,7 @@ class Login extends React.Component {
                 this.setState({user:data});
                 // store the token into the local storage
                 localStorage.setItem("token", this.state.user.token);
+                //localStorage.setItem("id", this.state.user.id);
                 // user login successfully worked --> navigate to the route /game in the GameRouter
                 this.props.history.push(`/game`);
             })
@@ -190,15 +191,6 @@ class Login extends React.Component {
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
 export default withRouter(Login);
-
-
-
-
-
-
-
-
-
 
 
 

@@ -6,12 +6,27 @@ const Container = styled.div`
   width: 280px;
   padding: 10px;
   border-radius: 6px;
-  display: flex;
+  display: inline;
   align-items: center;
   border: 1px solid #ffffff26;
 `;
 
 const UserName = styled.div`
+  font-weight: lighter;
+  margin-left: 5px;
+`;
+
+const Status = styled.div`
+  font-weight: lighter;
+  margin-left: 5px;
+`;
+
+const CreationDate = styled.div`
+  font-weight: lighter;
+  margin-left: 5px;
+`;
+
+const BirthDate = styled.div`
   font-weight: lighter;
   margin-left: 5px;
 `;
@@ -38,12 +53,21 @@ const Id = styled.div`
 const Player2 = ({ user }) => {
     return (
         <Container>
-            {/*<Name>name: {user.name}</Name>*/}
-            <UserName>username: {user.username}</UserName>
-            <Id>Id: {user.id}</Id>
-            <online-status>online-status: {user.status}</online-status>*/}
-            <creationDate>creationdate: {user.creationDate}</creationDate>
-            <birthDate>date of birth: {user.dateOfBirth}</birthDate>
+            <UserName>username:
+                {user.username}</UserName>
+
+            <Id>Id:
+                {user.id}</Id>
+
+            <Status>online-status:
+                {user.status}</Status>
+
+            <CreationDate>creation Date:
+                {user.creationDate}</CreationDate>
+
+            <BirthDate>date of birth:
+                {user.dateOfBirth}</BirthDate>
+
         </Container>
     );
 };

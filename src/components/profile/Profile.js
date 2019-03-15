@@ -40,28 +40,30 @@ class Profile extends React.Component {
         this.user =props.location.state.user;
     }
 
-   /* logout() {
+   logout() {
         localStorage.removeItem("token");
         this.props.history.push("/login");
-    }*/
+    }
 
     render() {
         return (
             <Container>
-                <h2>Your profile:</h2>
-                {/*<p>Get all users from secure end point:</p>*/}
+                <h2>User profile:</h2>
                     <div>
                         <Users>
                             <PlayerContainer key={this.state.user.id}>
-                                        <Player2 user={this.state.user} />
+
+                                <Player2 user={this.state.user} />
+
                             </PlayerContainer>
                         </Users>
                         <ButtonContainer>
                             <Button
-                                disabled={this.state.user.token !== localStorage.getItem("token")}
+                                // only the user can edit their own profile
+                                disabled={this.user.token !== localStorage.getItem("token")}
                                 width="25%"
                                 onClick={() => {
-                                    this.props.history.push("/Profile/"+this.state.user.id+"/EditProfile");
+                                    this.props.history.push("/userProfile/"+this.state.user.id+"/EditProfile");
                                 }}
                             >
                                 Edit
@@ -79,7 +81,7 @@ class Profile extends React.Component {
                         </ButtonContainer>
                         <ButtonContainer>
                         <Button
-                            width="100%"
+                            width="25%"
                             onClick={() => {
                                 this.logout();
                             }}
@@ -88,9 +90,8 @@ class Profile extends React.Component {
                         </Button>
                         </ButtonContainer>
                     </div>
-                )}
             </Container>
         );
     }
-}
+    }
 export default withRouter(Profile);

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {withRouter} from "react-router-dom";
 
 const Container = styled.div`
   margin: 6px 0;
@@ -35,7 +36,7 @@ const Id = styled.div`
  * https://reactjs.org/docs/components-and-props.html
  * @FunctionalComponent
  */
-const Player = ({ user }) => {
+const Player = ({props, user }) => {
   return (
     <Container>
       <Name>{user.name}</Name> <UserName>{user.username}</UserName>
@@ -44,4 +45,4 @@ const Player = ({ user }) => {
   );
 };
 
-export default Player;
+export default withRouter(Player);
